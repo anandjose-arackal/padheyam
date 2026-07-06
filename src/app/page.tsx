@@ -161,6 +161,7 @@ export default function HomePage() {
                 <LiveMassCard
                   churchId={e.church.id}
                   name={e.church.name}
+                  address={e.church.address}
                   distanceKm={e.church.distanceKm}
                   rite={e.church.rite}
                   count={visible.length}
@@ -217,6 +218,7 @@ export default function HomePage() {
 function LiveMassCard({
   churchId,
   name,
+  address,
   distanceKm,
   rite,
   count,
@@ -226,6 +228,7 @@ function LiveMassCard({
 }: {
   churchId: string;
   name: string;
+  address: string;
   distanceKm: number | null;
   rite: keyof typeof RITE_LABEL;
   count: number;
@@ -253,6 +256,9 @@ function LiveMassCard({
         <div className="min-w-0 flex-1">
           <div className="truncate font-display text-lg font-semibold leading-tight text-ink">
             {name}
+          </div>
+          <div className="mt-1 truncate text-xs font-medium text-muted-1">
+            {address}
           </div>
           <div className="mt-[5px] flex items-center gap-2.5 text-[13px] font-medium text-body-3">
             <span className="flex items-center gap-1">

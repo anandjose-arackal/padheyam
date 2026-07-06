@@ -7,9 +7,10 @@ import { ChurchIcon } from "@/components/church-icon";
 import { useActiveCoords } from "@/lib/location-context";
 import { useNearbyChurches } from "@/hooks/use-churches";
 import { useNow } from "@/hooks/use-now";
-import { getChurchStatus } from "@/lib/masses";
+import { getUpcomingMass } from "@/lib/masses";
 import { formatDistance } from "@/lib/geo";
 import { RITE_LABEL, statusStyle, statusTileGradient } from "@/lib/status";
+import type { MassStatus } from "@/lib/status";
 import type { ChurchDTO } from "@/lib/types";
 
 export default function SearchPage() {
@@ -29,7 +30,17 @@ export default function SearchPage() {
             .includes(q),
         )
       : churches;
-    return list.map((c) => ({ church: c, status: getChurchStatus(c.masses, now) }));
+    return list
+      .map((c) => {
+        const { status, countdownMinutes } = getUpcomingMass(c.masses, now);
+        return { church: c, status, countdownMinutes };
+      })
+      .sort((a, b) => {
+        const aMin = a.countdownMinutes ?? Infinity;
+        const bMin = b.countdownMinutes ?? Infinity;
+        if (aMin !== bMin) return aMin - bMin;
+        return (a.church.distanceKm ?? Infinity) - (b.church.distanceKm ?? Infinity);
+      });
   }, [churches, query, now]);
 
   const anyFar = results.some((r) => r.church.isFar);
@@ -104,7 +115,7 @@ function ChurchGroup({
   onOpen,
 }: {
   label: string | null;
-  items: { church: ChurchDTO; status: ReturnType<typeof getChurchStatus> }[];
+  items: { church: ChurchDTO; status: MassStatus }[];
   onOpen: (id: string) => void;
 }) {
   if (items.length === 0) return null;

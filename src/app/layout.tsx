@@ -3,6 +3,7 @@ import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { AppFrame } from "@/components/app-frame";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,9 +18,47 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Mass Tracker — Find Holy Mass near you",
-  description:
-    "Discover nearby Catholic churches and upcoming Holy Mass schedules based on your live location.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Find Holy Mass, Adoration & Confession Near You`,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "Mass times",
+    "Holy Mass near me",
+    "Catholic church finder",
+    "Adoration times",
+    "Confession times",
+    "Padheyam",
+  ],
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Find Holy Mass, Adoration & Confession Near You`,
+    description: SITE_DESCRIPTION,
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary",
+    title: `${SITE_NAME} — Find Holy Mass, Adoration & Confession Near You`,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export const viewport: Viewport = {
