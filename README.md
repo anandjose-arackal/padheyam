@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mass Tracker — Catholic Mass Finder
 
-## Getting Started
+A mobile-first web app that helps Catholics discover nearby churches and upcoming
+Holy Mass schedules based on their live location. Map-first home screen with
+glass cards, color-coded church markers, smart filters, a live "next Mass"
+countdown, plus church details, search, and saved-church screens.
 
-First, run the development server:
+## Tech stack
+
+- **Next.js 16** (App Router) + **React 19** + **TypeScript**
+- **Tailwind CSS v4** + **shadcn/ui** — fonts: Fraunces (display) + Inter (UI)
+- **Supabase** (Postgres + Auth) via `@supabase/supabase-js` / `@supabase/ssr` — no ORM, no connection string
+- **Supabase Auth** — anonymous browsing; sign-in only to save churches / set reminders
+- **Google Maps** via `@vis.gl/react-google-maps` (falls back to a stylized map with no API key)
+- **TanStack Query** (React Query) for data fetching
+
+## Getting started
+
+### 1. Environment
+
+Copy `.env.example` to `.env.local` and fill in:
+
+| Variable | Where to get it |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | (optional) Google Cloud → Maps JavaScript API |
+| `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` | (optional) Google Cloud → Map Management (for Advanced Markers) |
+
+> Only the three Supabase keys are required — the data layer uses `supabase-js`,
+> not a Postgres connection string. The app boots without any keys (gate + map
+> render, list empty). Without a Maps key it uses a stylized stand-in map.
+
+### 2. Database
+
+1. In the Supabase Dashboard → **SQL Editor**, paste and run
+   [`supabase/schema.sql`](supabase/schema.sql) (creates the tables + RLS policies).
+2. Seed the demo data:
+
+   ```bash
+   npm run db:seed   # inserts the 5 Wayanad churches + Mass schedules
+   ```
+
+In Supabase → Authentication, enable the **Email** provider (magic links) and
+optionally **Google**, and add `http://localhost:3000/auth/callback` to the
+redirect allow-list.
+
+### 3. Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Script | Purpose |
+|---|---|
+| `npm run dev` / `build` / `start` | Next.js dev / production build / serve |
+| `npm run lint` | ESLint |
+| `npm run db:seed` | Seed demo churches (after running `supabase/schema.sql`) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project structure
 
-## Learn More
+```
+src/
+  app/
+    page.tsx                 Home / Map
+    search/                  Search screen
+    saved/                   Saved churches (auth)
+    church/[id]/             Church details
+    alerts/  profile/        Stub screens
+    api/churches/            Nearby churches + by id
+    api/saved/               Saved churches (auth-protected)
+    auth/callback/           Supabase magic-link / OAuth callback
+  components/
+    map/                     MapView (Google Maps) + stylized FakeMap fallback
+    app-frame, bottom-nav, location-gate, auth-sheet, church-icon
+  lib/
+    churches.ts              Server data access via supabase-js (DTO mapping + distance)
+    geo.ts                   Haversine distance
+    masses.ts                Upcoming-Mass engine (status, countdown, schedules)
+    filters.ts               Filter-chip predicates
+    status.ts                Mass-status → color design system
+    supabase/admin.ts        Service-role client (server-only)
+    location-context, auth-context, supabase/{client,server,middleware}
+  hooks/                     React Query hooks (churches, saved, save-action, now)
+supabase/
+  schema.sql                 Tables + RLS (run once in the SQL editor)
+scripts/
+  seed.ts                    Seed the 5 Wayanad churches (npm run db:seed)
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Design source
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Recreated from the high-fidelity prototype in
+`design_handoff_mass_tracker/Mass Tracker.dc.html`. Design tokens (colors,
+radii, shadows, keyframes) live in `src/app/globals.css`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Not yet built (from the product brief)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Notification delivery, full Profile, Admin dashboard (church CRUD / CSV import /
+image upload), and Analytics. Nav targets for Alerts/Profile are stubbed.
