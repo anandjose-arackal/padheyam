@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local scratch / scraping data (not used by the app)
+/.claude/
+/crawler.js
+/mass_times.json
+/mass_times_151_to_200.json
