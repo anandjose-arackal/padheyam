@@ -17,6 +17,8 @@ import {
 import { formatDistance } from "@/lib/geo";
 import { FILTERS, matchesFilter, type FilterKey } from "@/lib/filters";
 import { RITE_LABEL } from "@/lib/status";
+import { RadiusEmptyState } from "@/components/radius-empty-state";
+import { ChurchBadges } from "@/components/church-badges";
 
 export default function HomePage() {
   const router = useRouter();
@@ -25,6 +27,7 @@ export default function HomePage() {
   const now = useNow();
   const { data: churches = [] } = useNearbyChurches(coords);
   const [filter, setFilter] = useState<FilterKey | null>(null);
+  const [radiusKm, setRadiusKm] = useState(10);
   const [recenterNonce, setRecenterNonce] = useState(0);
   const [cardIndex, setCardIndex] = useState(0);
   const [routeTarget, setRouteTarget] = useState<{
@@ -45,10 +48,13 @@ export default function HomePage() {
 
   const visible = useMemo(
     () =>
-      filter
+      (filter
         ? enriched.filter((e) => matchesFilter(e.church.masses, now, filter))
-        : enriched,
-    [enriched, filter, now],
+        : enriched
+      ).filter(
+        (e) => e.church.distanceKm == null || e.church.distanceKm <= radiusKm,
+      ),
+    [enriched, filter, now, radiusKm],
   );
 
   const mapChurches = visible.map((e) => ({
@@ -58,14 +64,14 @@ export default function HomePage() {
     status: e.status,
   }));
 
-  // Churches with an upcoming Mass, soonest (in-progress first) → latest.
+  // Churches with an upcoming Mass, closest church first.
   const upcoming = useMemo(
     () =>
       [...visible]
         .filter((e) => e.nextMass)
         .sort(
           (a, b) =>
-            (a.countdownMinutes ?? Infinity) - (b.countdownMinutes ?? Infinity),
+            (a.church.distanceKm ?? Infinity) - (b.church.distanceKm ?? Infinity),
         ),
     [visible],
   );
@@ -74,6 +80,16 @@ export default function HomePage() {
   useEffect(() => {
     setCardIndex((i) => Math.min(i, Math.max(upcoming.length - 1, 0)));
   }, [upcoming.length]);
+
+  // Already sorted by distance ascending, so the first card is the closest.
+  const closestChurchId = upcoming[0]?.church.id ?? null;
+
+  const soonestChurchId = useMemo(() => {
+    if (!upcoming.length) return null;
+    return upcoming.reduce((a, b) =>
+      (a.countdownMinutes ?? Infinity) < (b.countdownMinutes ?? Infinity) ? a : b,
+    ).church.id;
+  }, [upcoming]);
 
   return (
     <div className="absolute inset-0">
@@ -142,6 +158,11 @@ export default function HomePage() {
       </button>
 
       {/* bottom live-mass carousel */}
+      {upcoming.length === 0 && (
+        <div className="absolute inset-x-0 bottom-24 z-[45] px-4 animate-[floatUp_0.55s_cubic-bezier(0.2,0.9,0.3,1)_both]">
+          <RadiusEmptyState radiusKm={radiusKm} onWiden={setRadiusKm} />
+        </div>
+      )}
       {upcoming.length > 0 && (
         <div className="absolute inset-x-0 bottom-24 z-[45] animate-[floatUp_0.55s_cubic-bezier(0.2,0.9,0.3,1)_both]">
           <div
@@ -165,6 +186,8 @@ export default function HomePage() {
                   distanceKm={e.church.distanceKm}
                   rite={e.church.rite}
                   count={visible.length}
+                  isClosest={e.church.id === closestChurchId}
+                  isSoonest={e.church.id === soonestChurchId}
                   nextTimeLabel={
                     e.nextMass ? formatTimeLabel(e.nextMass.startMin) : "—"
                   }
@@ -222,6 +245,8 @@ function LiveMassCard({
   distanceKm,
   rite,
   count,
+  isClosest,
+  isSoonest,
   nextTimeLabel,
   countdown,
   onDirections,
@@ -232,6 +257,8 @@ function LiveMassCard({
   distanceKm: number | null;
   rite: keyof typeof RITE_LABEL;
   count: number;
+  isClosest: boolean;
+  isSoonest: boolean;
   nextTimeLabel: string;
   countdown: string;
   onDirections: () => void;
@@ -249,7 +276,9 @@ function LiveMassCard({
         </span>
       </div>
 
-      <div className="flex items-center gap-3.5">
+      <ChurchBadges isClosest={isClosest} isSoonest={isSoonest} />
+
+      <div className="mt-2 flex items-center gap-3.5">
         <div className="flex size-14 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(160deg,#e7eefb,#cfe0fb)] shadow-[inset_0_0_0_1px_rgba(59,130,246,0.12)]">
           <ChurchIcon className="size-[26px] text-today-text" strokeWidth={1.8} />
         </div>
