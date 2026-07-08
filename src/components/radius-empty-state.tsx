@@ -10,7 +10,7 @@ export function RadiusEmptyState({
   const next = nextRadiusTier(radiusKm);
 
   return (
-    <div className="glass rounded-2xl p-4 text-center text-[13px] text-text-secondary shadow-[0_16px_40px_-16px_rgba(22,58,107,0.3)]">
+    <div className="glass-subtle rounded-2xl p-4 text-center text-[13px] text-text-secondary shadow-[0_16px_40px_-16px_rgba(22,58,107,0.3)]">
       <p>No churches found within {radiusKm} km.</p>
       {next != null ? (
         <button

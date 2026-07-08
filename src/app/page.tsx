@@ -269,7 +269,7 @@ function LiveMassCard({
 }) {
   const router = useRouter();
   return (
-    <div className="glass rounded-[28px] p-[20px_20px_18px] shadow-[0_28px_64px_-20px_rgba(22,58,107,0.35)]">
+    <div className="glass-subtle rounded-[28px] p-[20px_20px_18px] shadow-[0_28px_64px_-20px_rgba(22,58,107,0.35)]">
       <div className="mb-3.5 flex items-center gap-[7px]">
         <span className="size-[7px] rounded-full bg-now shadow-[0_0_0_3px_rgba(43,182,115,0.2)]" />
         <span className="text-[11px] font-bold uppercase tracking-[0.5px] text-now-text">

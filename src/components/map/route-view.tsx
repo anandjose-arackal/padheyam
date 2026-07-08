@@ -28,7 +28,7 @@ export function RouteView({ origin, destination, destinationName, onClose }: Rou
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-screen">
+    <div className="fixed inset-0 z-[70] flex flex-col bg-screen">
       {/* top bar */}
       <div className="z-10 flex items-center gap-3 bg-white px-[18px] pb-3 pt-[54px] shadow-[0_6px_16px_-10px_rgba(30,40,70,0.25)]">
         <button

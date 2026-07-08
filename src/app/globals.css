@@ -263,3 +263,12 @@
   -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.7);
 }
+
+/* Near-opaque card surface — used where content needs to read clearly
+   over the map without a strong frosted-glass effect. */
+@utility glass-subtle {
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}

@@ -33,7 +33,7 @@ export function BottomNav() {
 
   return (
     <nav className="absolute inset-x-0 bottom-0 z-[60] px-4 pb-6 pt-2.5">
-      <div className="glass flex h-[68px] items-center justify-around rounded-[28px] shadow-[0_16px_40px_-16px_rgba(22,58,107,0.35)]">
+      <div className="glass-subtle flex h-[68px] items-center justify-around rounded-[28px] shadow-[0_16px_40px_-16px_rgba(22,58,107,0.35)]">
         {ITEMS.map((item) => {
           const active =
             item.href === "/"
