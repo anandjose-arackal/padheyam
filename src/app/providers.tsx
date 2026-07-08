@@ -5,8 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { Toaster } from "@/components/ui/sonner";
 import { LocationProvider } from "@/lib/location-context";
-import { AuthProvider } from "@/lib/auth-context";
-import { AuthSheetProvider } from "@/components/auth-sheet";
 
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -36,14 +34,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <MapsProvider>
-        <AuthProvider>
-          <AuthSheetProvider>
-            <LocationProvider>
-              {children}
-              <Toaster position="top-center" />
-            </LocationProvider>
-          </AuthSheetProvider>
-        </AuthProvider>
+        <LocationProvider>
+          {children}
+          <Toaster position="top-center" />
+        </LocationProvider>
       </MapsProvider>
     </QueryClientProvider>
   );

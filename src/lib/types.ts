@@ -20,8 +20,3 @@ export type ChurchDTO = {
    * included anyway because nothing was found within it. */
   isFar: boolean;
 };
-
-export type SavedDTO = {
-  churchId: string;
-  reminder: boolean;
-};

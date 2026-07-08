@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Bookmark, Map as MapIcon, User } from "lucide-react";
+import { Bell, Info, Map as MapIcon } from "lucide-react";
 import { ChurchIcon } from "@/components/church-icon";
 import { cn } from "@/lib/utils";
 
@@ -21,9 +21,8 @@ type NavItem = {
 const ITEMS: NavItem[] = [
   { href: "/", label: "Map", icon: MapIcon, match: ["/church"] },
   { href: "/search", label: "Churches", icon: ChurchIcon },
-  { href: "/saved", label: "Saved", icon: Bookmark },
   { href: "/alerts", label: "Alerts", icon: Bell },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/about", label: "About", icon: Info },
 ];
 
 export function BottomNav() {
@@ -34,7 +33,7 @@ export function BottomNav() {
 
   return (
     <nav className="absolute inset-x-0 bottom-0 z-[60] px-4 pb-6 pt-2.5">
-      <div className="glass flex h-16 items-center justify-around rounded-3xl shadow-[0_16px_40px_-16px_rgba(30,40,70,0.4)]">
+      <div className="glass flex h-[68px] items-center justify-around rounded-[28px] shadow-[0_16px_40px_-16px_rgba(22,58,107,0.35)]">
         {ITEMS.map((item) => {
           const active =
             item.href === "/"
@@ -46,16 +45,12 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex h-full flex-1 flex-col items-center justify-center gap-1 transition-colors",
-                active ? "text-ink-2" : "text-muted-2",
+                "flex h-full flex-1 flex-col items-center justify-center gap-1 transition-colors duration-250",
+                active ? "text-primary-blue" : "text-muted-2",
               )}
             >
-              <Icon
-                className="size-6"
-                strokeWidth={1.9}
-                fill={item.label === "Saved" && active ? "currentColor" : "none"}
-              />
-              <span className="text-[10px] font-semibold">{item.label}</span>
+              <Icon className="size-6" strokeWidth={1.9} fill="none" />
+              <span className="text-[10px] font-medium">{item.label}</span>
             </Link>
           );
         })}

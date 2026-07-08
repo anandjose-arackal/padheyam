@@ -38,7 +38,7 @@ export function MapView(props: MapViewProps) {
   const { center, churches, activeId, onMarkerTap, recenterNonce } = props;
 
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 [filter:saturate(0.9)]">
       <Map
         mapId={MAP_ID}
         defaultZoom={13}

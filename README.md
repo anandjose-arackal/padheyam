@@ -1,16 +1,16 @@
-# Mass Tracker — Catholic Mass Finder
+# Padheyam — Catholic Mass Finder
 
 A mobile-first web app that helps Catholics discover nearby churches and upcoming
-Holy Mass schedules based on their live location. Map-first home screen with
-glass cards, color-coded church markers, smart filters, a live "next Mass"
-countdown, plus church details, search, and saved-church screens.
+Mass, Adoration, and Confession schedules based on their live location. Map-first
+home screen with glass cards, color-coded church markers, smart filters, a live
+"next Mass" countdown, plus church details and search screens. Fully anonymous —
+no accounts, no sign-in, no personal data stored.
 
 ## Tech stack
 
 - **Next.js 16** (App Router) + **React 19** + **TypeScript**
 - **Tailwind CSS v4** + **shadcn/ui** — fonts: Fraunces (display) + Inter (UI)
-- **Supabase** (Postgres + Auth) via `@supabase/supabase-js` / `@supabase/ssr` — no ORM, no connection string
-- **Supabase Auth** — anonymous browsing; sign-in only to save churches / set reminders
+- **Supabase** (Postgres) via `@supabase/supabase-js` — no ORM, no connection string, no auth
 - **Google Maps** via `@vis.gl/react-google-maps` (falls back to a stylized map with no API key)
 - **TanStack Query** (React Query) for data fetching
 
@@ -41,10 +41,6 @@ Copy `.env.example` to `.env.local` and fill in:
    npm run db:seed   # inserts the 5 Wayanad churches + Mass schedules
    ```
 
-In Supabase → Authentication, enable the **Email** provider (magic links) and
-optionally **Google**, and add `http://localhost:3000/auth/callback` to the
-redirect allow-list.
-
 ### 3. Run
 
 ```bash
@@ -66,15 +62,13 @@ src/
   app/
     page.tsx                 Home / Map
     search/                  Search screen
-    saved/                   Saved churches (auth)
     church/[id]/             Church details
-    alerts/  profile/        Stub screens
+    alerts/                  Stub screen
+    about/                   App info + privacy note
     api/churches/            Nearby churches + by id
-    api/saved/               Saved churches (auth-protected)
-    auth/callback/           Supabase magic-link / OAuth callback
   components/
     map/                     MapView (Google Maps) + stylized FakeMap fallback
-    app-frame, bottom-nav, location-gate, auth-sheet, church-icon
+    app-frame, bottom-nav, location-gate, church-icon
   lib/
     churches.ts              Server data access via supabase-js (DTO mapping + distance)
     geo.ts                   Haversine distance
@@ -82,8 +76,8 @@ src/
     filters.ts               Filter-chip predicates
     status.ts                Mass-status → color design system
     supabase/admin.ts        Service-role client (server-only)
-    location-context, auth-context, supabase/{client,server,middleware}
-  hooks/                     React Query hooks (churches, saved, save-action, now)
+    location-context
+  hooks/                     React Query hooks (churches, now)
 supabase/
   schema.sql                 Tables + RLS (run once in the SQL editor)
 scripts/
@@ -98,5 +92,5 @@ radii, shadows, keyframes) live in `src/app/globals.css`.
 
 ## Not yet built (from the product brief)
 
-Notification delivery, full Profile, Admin dashboard (church CRUD / CSV import /
-image upload), and Analytics. Nav targets for Alerts/Profile are stubbed.
+Notification delivery, Admin dashboard (church CRUD / CSV import /
+image upload), and Analytics. The Alerts nav target is stubbed.

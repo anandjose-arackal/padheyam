@@ -107,7 +107,7 @@ export default function SearchPage() {
           onMouseUp={(e) => setRadiusKm(Number(e.currentTarget.value))}
           onTouchEnd={(e) => setRadiusKm(Number(e.currentTarget.value))}
           onKeyUp={(e) => setRadiusKm(Number(e.currentTarget.value))}
-          className="mt-1.5 w-full accent-[#222b45]"
+          className="mt-1.5 w-full accent-[#25314f]"
         />
       </div>
 

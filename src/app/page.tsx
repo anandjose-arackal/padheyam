@@ -102,45 +102,49 @@ export default function HomePage() {
       />
 
       {/* top location/search card */}
-      <div className="absolute inset-x-0 top-0 z-40 bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_30%,rgba(255,255,255,0))] px-[18px] pb-3.5 pt-[54px]">
+      <div className="absolute inset-x-0 top-0 z-40 bg-[linear-gradient(180deg,rgba(255,255,255,0.95)_35%,rgba(255,255,255,0))] px-[18px] pb-4 pt-[54px]">
         <button
           onClick={() => router.push("/location")}
-          className="glass flex h-[58px] w-full items-center gap-3 rounded-[22px] px-4 shadow-[0_12px_32px_-12px_rgba(30,40,70,0.28)]"
+          className="glass flex h-[72px] w-full items-center gap-3.5 rounded-[24px] px-[18px] shadow-[0_16px_40px_-16px_rgba(22,58,107,0.28)] transition-transform active:scale-[0.98]"
         >
-          <span className="flex size-[34px] shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(160deg,#f3ddae,#cda35f)]">
-            <MapPin className="size-[17px] text-navy-1" strokeWidth={2.2} />
+          <span className="flex size-[42px] shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(160deg,#69b7ff,#2f80ed)] shadow-[0_6px_16px_-4px_rgba(47,128,237,0.5)]">
+            <MapPin className="size-[22px] text-white" strokeWidth={2.2} />
           </span>
           <span className="min-w-0 flex-1 text-left">
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.6px] text-muted-1">
+            <span className="block text-[11px] font-semibold uppercase tracking-[0.6px] text-text-secondary">
               Your location
             </span>
-            <span className="block truncate text-[15px] font-bold text-ink">
+            <span className="block truncate text-[18px] font-semibold leading-tight text-text-primary">
               {locationLabel}
             </span>
           </span>
-          <ChevronRight className="size-5 text-muted-1" strokeWidth={2.2} />
+          <ChevronRight className="size-[22px] shrink-0 text-text-secondary" strokeWidth={2.2} />
         </button>
 
         {/* filter chips */}
-        <div className="no-scrollbar mt-3 flex gap-[9px] overflow-x-auto px-0.5 pb-1 pt-0.5">
+        <div className="no-scrollbar mt-3.5 flex gap-[9px] overflow-x-auto px-0.5 pb-1 pt-0.5">
           {FILTERS.map((f) => {
             const on = filter === f.key;
             return (
               <button
                 key={f.key}
                 onClick={() => setFilter(on ? null : f.key)}
-                className="flex h-[38px] shrink-0 items-center gap-[7px] rounded-[14px] px-4 text-[13px] font-semibold transition-all"
+                className="flex h-[40px] shrink-0 items-center gap-[7px] rounded-full px-4 text-[13px] font-semibold transition-all duration-250 active:scale-[0.98]"
                 style={{
-                  background: on ? "#222b45" : "rgba(255,255,255,0.86)",
-                  color: on ? "#fff" : "#4a5468",
+                  background: on
+                    ? "linear-gradient(135deg,#69b7ff,#2f80ed)"
+                    : "rgba(255,255,255,0.82)",
+                  color: on ? "#fff" : "#163a6b",
+                  backdropFilter: "blur(25px)",
+                  border: on ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.6)",
                   boxShadow: on
-                    ? "0 10px 24px -10px rgba(34,43,69,0.5)"
-                    : "0 8px 22px -14px rgba(30,40,70,0.25)",
+                    ? "0 10px 24px -8px rgba(47,128,237,0.55)"
+                    : "0 8px 22px -14px rgba(22,58,107,0.2)",
                 }}
               >
                 <span
                   className="size-2 rounded-full"
-                  style={{ background: f.dot }}
+                  style={{ background: on ? "#fff" : f.dot }}
                 />
                 {f.label}
               </button>
@@ -152,9 +156,9 @@ export default function HomePage() {
       {/* recenter FAB */}
       <button
         onClick={() => setRecenterNonce((n) => n + 1)}
-        className="glass absolute bottom-[300px] right-[18px] z-40 flex size-12 items-center justify-center rounded-2xl shadow-[0_10px_26px_-10px_rgba(30,40,70,0.4)]"
+        className="glass absolute bottom-[300px] right-[18px] z-40 flex size-14 items-center justify-center rounded-full shadow-[0_12px_30px_-8px_rgba(47,128,237,0.45)] transition-transform active:scale-[0.98]"
       >
-        <LocateFixed className="size-[22px] text-[#3b82f6]" strokeWidth={2} />
+        <LocateFixed className="size-[24px] text-primary-blue" strokeWidth={2.2} />
       </button>
 
       {/* bottom live-mass carousel */}
@@ -217,7 +221,7 @@ export default function HomePage() {
                   style={{
                     width: i === cardIndex ? 16 : 6,
                     background:
-                      i === cardIndex ? "#222b45" : "rgba(34,43,69,0.25)",
+                      i === cardIndex ? "#25314f" : "rgba(37,49,79,0.25)",
                   }}
                 />
               ))}
@@ -265,33 +269,33 @@ function LiveMassCard({
 }) {
   const router = useRouter();
   return (
-    <div className="glass rounded-[30px] p-[18px_18px_16px] shadow-[0_24px_60px_-18px_rgba(30,40,70,0.4)]">
-      <div className="mb-3 flex items-center gap-[7px]">
-        <span className="size-[7px] rounded-full bg-now shadow-[0_0_0_3px_rgba(34,197,94,0.18)]" />
+    <div className="glass rounded-[28px] p-[20px_20px_18px] shadow-[0_28px_64px_-20px_rgba(22,58,107,0.35)]">
+      <div className="mb-3.5 flex items-center gap-[7px]">
+        <span className="size-[7px] rounded-full bg-now shadow-[0_0_0_3px_rgba(43,182,115,0.2)]" />
         <span className="text-[11px] font-bold uppercase tracking-[0.5px] text-now-text">
           Next Mass nearby
         </span>
-        <span className="ml-auto text-xs font-semibold text-muted-1">
+        <span className="ml-auto text-xs font-semibold text-text-secondary">
           {count} {count === 1 ? "church" : "churches"} near you
         </span>
       </div>
 
       <ChurchBadges isClosest={isClosest} isSoonest={isSoonest} />
 
-      <div className="mt-2 flex items-center gap-3.5">
-        <div className="flex size-14 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(160deg,#e7eefb,#cfe0fb)] shadow-[inset_0_0_0_1px_rgba(59,130,246,0.12)]">
-          <ChurchIcon className="size-[26px] text-today-text" strokeWidth={1.8} />
+      <div className="mt-2.5 flex items-center gap-3.5">
+        <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(160deg,#eaf5ff,#cfe4ff)] shadow-[inset_0_0_0_1px_rgba(47,128,237,0.14)]">
+          <ChurchIcon className="size-[26px] text-primary-blue" strokeWidth={1.8} />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate font-display text-lg font-semibold leading-tight text-ink">
+          <div className="truncate font-display text-lg font-semibold leading-tight text-text-primary">
             {name}
           </div>
-          <div className="mt-1 truncate text-xs font-medium text-muted-1">
+          <div className="mt-1 truncate text-xs font-medium text-text-primary">
             {address}
           </div>
-          <div className="mt-[5px] flex items-center gap-2.5 text-[13px] font-medium text-body-3">
+          <div className="mt-[5px] flex items-center gap-2.5 text-[13px] font-semibold text-text-primary">
             <span className="flex items-center gap-1">
-              <MapPin className="size-[13px] text-muted-1" strokeWidth={2.2} />
+              <MapPin className="size-[13px] text-text-primary" strokeWidth={2.2} />
               {distanceKm != null ? formatDistance(distanceKm) : "—"}
             </span>
             <span className="text-muted-3">•</span>
@@ -300,20 +304,20 @@ function LiveMassCard({
         </div>
       </div>
 
-      <div className="mt-[15px] flex items-center gap-3 rounded-[18px] border border-[rgba(34,197,94,0.16)] bg-[linear-gradient(120deg,#ecfbf1,#e1f7e9)] p-[13px_16px]">
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-[0.4px] text-now-text">
+      <div className="mt-4 grid grid-cols-2 gap-2.5">
+        <div className="rounded-2xl bg-accent-blue p-[14px_16px]">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.4px] text-primary-blue">
             Next Mass
           </div>
-          <div className="mt-[3px] font-display text-[23px] font-semibold leading-none text-now-text-deep">
+          <div className="mt-[3px] font-display text-[24px] font-semibold leading-none text-text-primary">
             {nextTimeLabel}
           </div>
         </div>
-        <div className="ml-auto text-right">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.4px] text-now-text">
+        <div className="rounded-2xl bg-accent-blue p-[14px_16px]">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.4px] text-primary-blue">
             Starts in
           </div>
-          <div className="mt-[3px] text-lg font-bold text-now-text-deep">
+          <div className="mt-[3px] text-lg font-bold text-text-primary">
             {countdown}
           </div>
         </div>
@@ -322,13 +326,13 @@ function LiveMassCard({
       <div className="mt-3.5 flex gap-2.5">
         <button
           onClick={() => router.push(`/church/${churchId}`)}
-          className="h-[50px] flex-1 rounded-[17px] bg-ink-2 text-sm font-bold text-white"
+          className="h-[52px] flex-1 rounded-2xl bg-[linear-gradient(135deg,#69b7ff,#2f80ed)] text-sm font-bold text-white shadow-[0_12px_28px_-10px_rgba(47,128,237,0.6)] transition-transform active:scale-[0.98]"
         >
           View Details
         </button>
         <button
           onClick={onDirections}
-          className="flex h-[50px] flex-1 items-center justify-center gap-[7px] rounded-[17px] bg-surface-alt text-sm font-bold text-ink-3"
+          className="glass flex h-[52px] flex-1 items-center justify-center gap-[7px] rounded-2xl border border-primary-blue/30 text-sm font-bold text-primary-blue transition-transform active:scale-[0.98]"
         >
           <Navigation className="size-[17px]" strokeWidth={2} />
           Directions

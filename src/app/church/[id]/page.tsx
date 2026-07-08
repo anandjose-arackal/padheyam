@@ -17,7 +17,6 @@ import { RouteView } from "@/components/map/route-view";
 import { useActiveCoords } from "@/lib/location-context";
 import { useChurch } from "@/hooks/use-churches";
 import { useNow } from "@/hooks/use-now";
-import { useSaveAction } from "@/hooks/use-save-action";
 import {
   DAY_NAMES,
   formatTime,
@@ -54,13 +53,12 @@ export default function ChurchDetailsPage() {
   const coords = useActiveCoords();
   const now = useNow();
   const { data: church, isLoading } = useChurch(id, coords);
-  const { saved, onToggle } = useSaveAction(id);
   const [showRoute, setShowRoute] = useState(false);
 
   if (isLoading || !church) {
     return (
       <div className="absolute inset-0 animate-pulse bg-screen">
-        <div className="h-[330px] bg-[linear-gradient(170deg,#2a345a,#3b4a7a)]" />
+        <div className="h-[330px] bg-[linear-gradient(170deg,#7fd6cd,#3fb6ae)]" />
       </div>
     );
   }
@@ -75,30 +73,24 @@ export default function ChurchDetailsPage() {
     <div className="absolute inset-0 overflow-hidden bg-screen animate-[fadeIn_0.3s_ease]">
       <div className="no-scrollbar absolute inset-0 overflow-y-auto pb-10">
         {/* hero */}
-        <div className="relative h-[330px] bg-[linear-gradient(170deg,#2a345a,#3b4a7a_55%,#566490)]">
-          <div className="absolute inset-0 opacity-45 [background:radial-gradient(70%_60%_at_30%_20%,rgba(243,221,174,0.45),transparent_60%)]" />
+        <div className="relative h-[330px] bg-[linear-gradient(170deg,#7fd6cd,#3fb6ae_55%,#2b9a93)]">
+          <div className="absolute inset-0 opacity-45 [background:radial-gradient(70%_60%_at_30%_20%,rgba(247,198,217,0.45),transparent_60%)]" />
           <ChurchIcon
             className="absolute -bottom-5 -right-8 size-[280px] opacity-[0.16] text-white"
             strokeWidth={1}
           />
 
-          <div className="absolute inset-x-[18px] top-[54px] flex justify-between">
+          <div className="absolute inset-x-[18px] top-[54px] flex justify-start">
             <button
               onClick={() => router.push("/")}
               className="flex size-11 items-center justify-center rounded-[15px] bg-white/[0.18] text-white backdrop-blur-md"
             >
               <ChevronLeft className="size-[22px]" strokeWidth={2.2} />
             </button>
-            <button
-              onClick={onToggle}
-              className="flex size-11 items-center justify-center rounded-[15px] bg-white/[0.18] text-white backdrop-blur-md"
-            >
-              <BookmarkGlyph filled={saved} stroke="#fff" />
-            </button>
           </div>
 
           <div className="absolute inset-x-[22px] bottom-[30px]">
-            <span className="inline-flex h-7 items-center gap-1.5 rounded-[9px] bg-[rgba(243,221,174,0.92)] px-3 text-[11px] font-bold uppercase tracking-[0.4px] text-gold-ink">
+            <span className="inline-flex h-7 items-center gap-1.5 rounded-[9px] bg-[rgba(247,198,217,0.92)] px-3 text-[11px] font-bold uppercase tracking-[0.4px] text-gold-ink">
               {RITE_LABEL[church.rite]} Rite
             </span>
             <h1 className="mt-3.5 font-display text-3xl font-semibold leading-tight tracking-[-0.3px] text-white">
@@ -131,12 +123,6 @@ export default function ChurchDetailsPage() {
               <Phone className="size-5 text-ink-3" strokeWidth={2} />
             </a>
           )}
-          <button
-            onClick={onToggle}
-            className="flex size-[54px] items-center justify-center rounded-[18px] bg-surface-alt"
-          >
-            <BookmarkGlyph filled={saved} stroke="#2a345a" />
-          </button>
         </div>
 
         {/* today's masses */}
@@ -357,19 +343,3 @@ function MassRowItem({
   );
 }
 
-function BookmarkGlyph({ filled, stroke }: { filled: boolean; stroke: string }) {
-  return (
-    <svg
-      width="21"
-      height="21"
-      viewBox="0 0 24 24"
-      fill={filled ? stroke : "none"}
-      stroke={stroke}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
-    </svg>
-  );
-}

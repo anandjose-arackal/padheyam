@@ -36,7 +36,7 @@ export function FakeMap({
   onMarkerTap?: (id: string) => void;
 }) {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#e9edf2]">
+    <div className="absolute inset-0 overflow-hidden bg-[#e9edf2] [filter:saturate(0.9)]">
       {/* park / water blobs */}
       <div className="absolute left-[-40px] top-[120px] h-[200px] w-[240px] bg-[#d7e8d8] [border-radius:46%_54%_60%_40%/50%_46%_54%_50%]" />
       <div className="absolute bottom-[180px] right-[-70px] h-[230px] w-[300px] bg-[#cfe1ec] [border-radius:54%_46%_40%_60%/46%_60%_40%_54%]" />
