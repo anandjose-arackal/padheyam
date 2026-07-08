@@ -28,6 +28,7 @@ import {
   type MassOccurrence,
   type MassRow,
   type MassTag,
+  type ScheduleCategory,
 } from "@/lib/masses";
 import { formatDistance } from "@/lib/geo";
 import { RITE_LABEL } from "@/lib/status";
@@ -37,6 +38,44 @@ const TAG_STYLE: Record<MassTag, { label: string; bg: string; fg: string }> = {
   upcoming: { label: "Upcoming", bg: "#ecfbf1", fg: "#16a34a" },
   later: { label: "Later", bg: "#eef3fb", fg: "#3b6fd4" },
   done: { label: "Done", bg: "#f1f3f7", fg: "#9aa3b5" },
+};
+
+/** Per-category identity: default title, icon, and accent used on the details screen. */
+const CATEGORY_META: Record<
+  ScheduleCategory,
+  {
+    defaultLabel: string;
+    icon: React.ComponentType<{
+      className?: string;
+      strokeWidth?: number;
+      style?: React.CSSProperties;
+    }>;
+    dot: string;
+    iconBg: string;
+    iconFg: string;
+  }
+> = {
+  mass: {
+    defaultLabel: "Holy Mass",
+    icon: ChurchIcon,
+    dot: "#3b82f6",
+    iconBg: "linear-gradient(160deg,#eaf5ff,#cfe4ff)",
+    iconFg: "#3b6fd4",
+  },
+  adoration: {
+    defaultLabel: "Eucharistic Adoration",
+    icon: Flame,
+    dot: "#f59e0b",
+    iconBg: "linear-gradient(160deg,#fff3e0,#ffe3bd)",
+    iconFg: "#d97706",
+  },
+  confession: {
+    defaultLabel: "Confession",
+    icon: Cross,
+    dot: "#8b5cf6",
+    iconBg: "linear-gradient(160deg,#f1ecfb,#e2d6f8)",
+    iconFg: "#8b5cf6",
+  },
 };
 
 const FACILITIES = [
@@ -126,7 +165,7 @@ export default function ChurchDetailsPage() {
         </div>
 
         {/* today's masses */}
-        <Section title="Today's Masses">
+        <Section title="Today's Masses" accent={CATEGORY_META.mass.dot}>
           {today.length ? (
             <div className="flex flex-col gap-[9px]">
               {today.map((m, i) => (
@@ -140,10 +179,10 @@ export default function ChurchDetailsPage() {
 
         {/* today's adoration */}
         {todayAdoration.length > 0 && (
-          <Section title="Today's Adoration">
+          <Section title="Today's Adoration" accent={CATEGORY_META.adoration.dot}>
             <div className="flex flex-col gap-[9px]">
               {todayAdoration.map((m, i) => (
-                <MassRowItem key={i} occ={m} hideTag />
+                <MassRowItem key={i} occ={m} />
               ))}
             </div>
           </Section>
@@ -151,10 +190,10 @@ export default function ChurchDetailsPage() {
 
         {/* today's confession */}
         {todayConfession.length > 0 && (
-          <Section title="Today's Confession">
+          <Section title="Today's Confession" accent={CATEGORY_META.confession.dot}>
             <div className="flex flex-col gap-[9px]">
               {todayConfession.map((m, i) => (
-                <MassRowItem key={i} occ={m} hideTag />
+                <MassRowItem key={i} occ={m} />
               ))}
             </div>
           </Section>
@@ -262,15 +301,25 @@ export default function ChurchDetailsPage() {
 
 function Section({
   title,
+  accent,
   children,
 }: {
   title: string;
+  accent?: string;
   children: React.ReactNode;
 }) {
   return (
     <div className="px-[18px] pt-[18px]">
-      <div className="mb-3 font-display text-lg font-semibold text-ink">
-        {title}
+      <div className="mb-3 flex items-center gap-2">
+        {accent && (
+          <span
+            className="size-[7px] shrink-0 rounded-full"
+            style={{ background: accent }}
+          />
+        )}
+        <div className="font-display text-lg font-semibold text-ink">
+          {title}
+        </div>
       </div>
       {children}
     </div>
@@ -309,6 +358,8 @@ function MassRowItem({
 }) {
   const { time, ampm } = formatTime(occ.startMin);
   const tag = TAG_STYLE[occ.tag];
+  const meta = CATEGORY_META[occ.category];
+  const Icon = meta.icon;
   return (
     <div
       className="flex items-center gap-3.5 rounded-[18px] bg-white p-[14px_16px] shadow-[0_6px_18px_-12px_rgba(30,40,70,0.3)]"
@@ -316,7 +367,7 @@ function MassRowItem({
         border: `1px solid ${occ.tag === "now" || occ.tag === "upcoming" ? "rgba(34,197,94,0.3)" : "#f0f2f7"}`,
       }}
     >
-      <div className="w-12 text-center">
+      <div className="w-12 shrink-0 text-center">
         <div className="font-display text-[17px] font-semibold leading-none text-ink">
           {time}
         </div>
@@ -324,16 +375,23 @@ function MassRowItem({
           {ampm}
         </div>
       </div>
-      <div className="h-[30px] w-px bg-surface-alt" />
-      <div className="flex-1">
-        <div className="text-sm font-semibold text-ink-3">
-          {occ.label ?? "Holy Mass"}
+      <div
+        className="flex size-11 shrink-0 items-center justify-center rounded-2xl"
+        style={{ background: meta.iconBg }}
+      >
+        <Icon className="size-[19px]" strokeWidth={1.8} style={{ color: meta.iconFg }} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-semibold text-ink-3">
+          {occ.label ?? meta.defaultLabel}
         </div>
-        <div className="mt-0.5 text-xs text-muted-1">{occ.language}</div>
+        {occ.language && (
+          <div className="mt-0.5 truncate text-xs text-muted-1">{occ.language}</div>
+        )}
       </div>
       {!hideTag && (
         <span
-          className="flex h-[26px] items-center rounded-lg px-[11px] text-[11px] font-bold"
+          className="flex h-[26px] shrink-0 items-center rounded-lg px-[11px] text-[11px] font-bold"
           style={{ background: tag.bg, color: tag.fg }}
         >
           {tag.label}
